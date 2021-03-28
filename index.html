@@ -29,38 +29,38 @@
 const resources = [
   {
     name: 'male',
-	type: 'image',
-	src: 'farmer_base.png'
+    type: 'image',
+    src: 'farmer_base.png'
   },
   {
     name: 'female',
-	type: 'image',
-	src: 'farmer_girl_base.png'
+    type: 'image',
+    src: 'farmer_girl_base.png'
   },
   {
     name: 'accessory',
-	type: 'image',
-	src: 'accessories.png'
+    type: 'image',
+    src: 'accessories.png'
   },
   {
     name: 'shirt',
-	type: 'image',
-	src: 'shirts.png'
+    type: 'image',
+    src: 'shirts.png'
   },
   {
     name: 'pants',
-	type: 'image',
-	src: 'pants.png'
+    type: 'image',
+    src: 'pants.png'
   },
   {
     name: 'hair_basic',
-	type: 'image',
-	src: 'hairstyles.png'
+  type: 'image',
+  src: 'hairstyles.png'
   },
   {
     name: 'hair_fancy',
-	type: 'image',
-	src: 'hairstyles2.png'
+    type: 'image',
+    src: 'hairstyles2.png'
   }
 ];
 
@@ -74,9 +74,9 @@ me.device.onReady(function () {
     alert("Your browser does not support HTML5 canvas.");
     return;
   }
-	
-	document.getElementsByTagName('canvas')[0].style.width = '256px';
-	document.getElementsByTagName('canvas')[0].style.height = '256px';
+  
+  document.getElementsByTagName('canvas')[0].style.width = '256px';
+  document.getElementsByTagName('canvas')[0].style.height = '256px';
 
   me.loader.preload(resources, loaded);
 });
@@ -85,9 +85,9 @@ function loaded() {
   me.game.world.addChild(new me.ColorLayer("background", "#51a8f5"));
   const male = new me.Sprite(32, 32, {
     image: 'male',
-	  framewidth: 16,
-	  frameheight: 32,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 32,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   male.addAnimation('front', [0]);
   male.setCurrentAnimation('front');
@@ -95,12 +95,12 @@ function loaded() {
   
   const shirt = new me.Sprite(32, 35, {
     image: 'shirt',
-	  framewidth: 8,
-	  frameheight: 8,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 8,
+    frameheight: 8,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   shirtIndexes.forEach((frameIndex, index) => {
-	  shirt.addAnimation(index + 1, [frameIndex]);
+    shirt.addAnimation(index + 1, [frameIndex]);
   });
   shirt.setCurrentAnimation(1);
   me.game.world.addChild(shirt);
@@ -111,9 +111,9 @@ function loaded() {
   
   const pant = new me.Sprite(32, 32, {
     image: 'pants',
-	  framewidth: 16,
-	  frameheight: 32,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 32,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   pant.addAnimation(1, [0]);
   pant.addAnimation(2, [12]);
@@ -124,10 +124,10 @@ function loaded() {
   
   document.getElementById('pant_col').addEventListener('change', (e) => {
     pant.tint.setColor(
-	    parseInt("0x" + e.target.value.slice(1,3)),
-	    parseInt("0x" + e.target.value.slice(3,5)),
-	    parseInt("0x" + e.target.value.slice(5,7))
-	  );
+      parseInt("0x" + e.target.value.slice(1,3)),
+      parseInt("0x" + e.target.value.slice(3,5)),
+      parseInt("0x" + e.target.value.slice(5,7))
+    );
   });
   
   document.getElementById('pant').addEventListener('change', (e) => {
@@ -138,9 +138,9 @@ function loaded() {
   
   const arms = new me.Sprite(32, 32, {
     image: 'male',
-	  framewidth: 16,
-	  frameheight: 32,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 32,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   arms.addAnimation('front', [6]);
   arms.setCurrentAnimation('front');
@@ -148,9 +148,9 @@ function loaded() {
   
   const hair = new me.Sprite(32, 33, {
     image: 'hair_basic',
-	  framewidth: 16,
-	  frameheight: 32,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 32,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   hairIndexes.forEach((frameIndex, index) => {
     hair.addAnimation(index + 1, [frameIndex]);
@@ -160,9 +160,9 @@ function loaded() {
   
   const hairfancy = new me.Sprite(32, 33, {
     image: 'hair_fancy',
-	  framewidth: 16,
-	  frameheight: 32,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 32,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   hairFancyIndexes.forEach((frameIndex, index) => {
     hairfancy.addAnimation(index + hairIndexes.length + 1, [frameIndex]);
@@ -173,40 +173,40 @@ function loaded() {
   
   document.getElementById('hair_col').addEventListener('change', (e) => {
     hair.tint.setColor(
-	    parseInt("0x" + e.target.value.slice(1,3)),
-	    parseInt("0x" + e.target.value.slice(3,5)),
-	    parseInt("0x" + e.target.value.slice(5,7))
-	  );
-	  hairfancy.tint.setColor(
-	    parseInt("0x" + e.target.value.slice(1,3)),
-	    parseInt("0x" + e.target.value.slice(3,5)),
-	    parseInt("0x" + e.target.value.slice(5,7))
-	  );
-	  document.getElementById('accessory').dispatchEvent(new Event('change'));
+      parseInt("0x" + e.target.value.slice(1,3)),
+      parseInt("0x" + e.target.value.slice(3,5)),
+      parseInt("0x" + e.target.value.slice(5,7))
+    );
+    hairfancy.tint.setColor(
+      parseInt("0x" + e.target.value.slice(1,3)),
+      parseInt("0x" + e.target.value.slice(3,5)),
+      parseInt("0x" + e.target.value.slice(5,7))
+    );
+    document.getElementById('accessory').dispatchEvent(new Event('change'));
   });
   
   document.getElementById('hair').addEventListener('change', (e) => {
     if (e.target.value > hairIndexes.length) {
-	    hairfancy.setCurrentAnimation(e.target.value);
-	    hair.alpha = 0;
-	    hairfancy.alpha = 1;
-	  } else {
-	    hair.setCurrentAnimation(e.target.value);
-	    hair.alpha = 1;
-	    hairfancy.alpha = 0;
-	  }
+      hairfancy.setCurrentAnimation(e.target.value);
+      hair.alpha = 0;
+      hairfancy.alpha = 1;
+    } else {
+      hair.setCurrentAnimation(e.target.value);
+      hair.alpha = 1;
+      hairfancy.alpha = 0;
+    }
   });
   
   document.getElementById('hair_col').dispatchEvent(new Event('change'));
   
   const accessory = new me.Sprite(32, 26, {
     image: 'accessory',
-	  framewidth: 16,
-	  frameheight: 16,
-	  anchorPoint: new me.Vector2d(0.5, 0.5)
+    framewidth: 16,
+    frameheight: 16,
+    anchorPoint: new me.Vector2d(0.5, 0.5)
   });
   accessoryIndexes.forEach((frameIndex, index) => {
-	  accessory.addAnimation(index + 2, [frameIndex]);
+    accessory.addAnimation(index + 2, [frameIndex]);
   });
   accessory.setCurrentAnimation(21);
   me.game.world.addChild(accessory);
@@ -214,19 +214,19 @@ function loaded() {
   document.getElementById('accessory').addEventListener('change', (e) => {
     if (e.target.value === '1') {
       accessory.setCurrentAnimation(21);
-	    accessory.tint.setColor(255, 255, 255);
+      accessory.tint.setColor(255, 255, 255);
     } else {
-	    if (e.target.value < 8) {
-	      const hair_col = document.getElementById('hair_col').value;
-	      accessory.tint.setColor(
-	        parseInt("0x" + hair_col.slice(1,3)),
-	        parseInt("0x" + hair_col.slice(3,5)),
-	        parseInt("0x" + hair_col.slice(5,7))
-	      );
-	    } else {
-	      accessory.tint.setColor(255, 255, 255);
-	    }
-	    accessory.setCurrentAnimation(e.target.value);
+      if (e.target.value < 8) {
+        const hair_col = document.getElementById('hair_col').value;
+        accessory.tint.setColor(
+          parseInt("0x" + hair_col.slice(1,3)),
+          parseInt("0x" + hair_col.slice(3,5)),
+          parseInt("0x" + hair_col.slice(5,7))
+        );
+      } else {
+        accessory.tint.setColor(255, 255, 255);
+      }
+      accessory.setCurrentAnimation(e.target.value);
     }
   });
 }
