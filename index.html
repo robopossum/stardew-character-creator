@@ -12,6 +12,8 @@
         <input name="hair_col" id="hair_col" type="color" value="#BF5432">
         <label for="pant_col">Pants color</label>
         <input name="pant_col" id="pant_col" type="color" value="#2F5DB5">
+        <label for="skin">Skin</label>
+        <input type="number" name="skin" id="skin" value="1" min="1" max="24">
         <label for="hair">Hair</label>
         <input type="number" name="hair" id="hair" value="1" min="1" max="74">
         <label for="shirt">Shirt</label>
@@ -21,7 +23,7 @@
         <label for="pant">Accessory</label>
         <input type="number" name="accessory" id="accessory" value="1" min="1" max="20">
         <button id="copy">Copy to clipboard</button>
-        <p><i>Why no options for skin?</i></p><p>Because CA does some insane pixel matching color replacement on the base sprite that this open source engine doesn't have the capability to do</p>
+        <p><i>Why doesn't skin update?</i></p><p>Because CA does some insane pixel matching color replacement on the base sprite that this open source engine doesn't have the capability to do</p>
         <p><a href="https://github.com/robopossum/stardew-character-creator">Source</a></p>
       </div>
     </div>
@@ -92,7 +94,7 @@ me.device.onReady(function () {
 function loaded() {
   document.getElementById('copy').addEventListener('click', () => {
     const vals = [
-      1,
+      document.getElementById('skin').value,
       document.getElementById('hair').value,
       document.getElementById('shirt').value,
       document.getElementById('pant').value,
