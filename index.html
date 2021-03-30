@@ -1,17 +1,26 @@
 <html>
   <head>
-    <script src="https://cdn.jsdelivr.net/npm/melonjs@8.0.1/dist/melonjs.min.js"></script>
+      <title>Stardew Valley Character Creator</title>
   </head>
   <body>
     <div style="display: flex">
-      <div id="preview"></div>
+      <div id="test" style="width: 256px">
+        <canvas id="skin_canvas" style="display: none"></canvas>
+        <canvas id="male_base" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="pants_canvas" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="shirt_canvas" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="arms_canvas" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="eyes_canvas" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="hair_canvas" width="256" height="256" style="position: absolute"></canvas>
+        <canvas id="accessory_canvas" width="256" height="256" style="position: absolute"></canvas>
+      </div>
       <div id="inputs" style="flex-grow: 1; padding: 25px">
         <label for="eye_col">Eye color</label>
-        <input name="eye_col" id="eye_col" type="color" value="#784034">
+        <input name="eye_col" id="eye_col" type="color" value="#7a4434">
         <label for="hair_col">Hair color</label>
-        <input name="hair_col" id="hair_col" type="color" value="#BF5432">
+        <input name="hair_col" id="hair_col" type="color" value="#c15b32">
         <label for="pant_col">Pants color</label>
-        <input name="pant_col" id="pant_col" type="color" value="#2F5DB5">
+        <input name="pant_col" id="pant_col" type="color" value="#2e55b7">
         <label for="skin">Skin</label>
         <input type="number" name="skin" id="skin" value="1" min="1" max="24">
         <label for="hair">Hair</label>
@@ -23,271 +32,267 @@
         <label for="pant">Accessory</label>
         <input type="number" name="accessory" id="accessory" value="1" min="1" max="20">
         <button id="copy">Copy to clipboard</button>
-        <p><i>Why doesn't skin update?</i></p><p>Because CA does some insane pixel matching color replacement on the base sprite that this open source engine doesn't have the capability to do</p>
         <p><a href="https://github.com/robopossum/stardew-character-creator">Source</a></p>
+        <p><a href="https://github.com/robopossum/stardew-character-creator/issues">Submit a bug</a></p>
       </div>
     </div>
 <script>
-//3, 57, 47
-//4, 74, 75
-//61, 74, 71
-const resources = [
-  {
-    name: 'male',
-    type: 'image',
-    src: 'farmer_base.png'
-  },
-  {
-    name: 'female',
-    type: 'image',
-    src: 'farmer_girl_base.png'
-  },
-  {
-    name: 'accessory',
-    type: 'image',
-    src: 'accessories.png'
-  },
-  {
-    name: 'shirt',
-    type: 'image',
-    src: 'shirts.png'
-  },
-  {
-    name: 'pants',
-    type: 'image',
-    src: 'pants.png'
-  },
-  {
-    name: 'hair_basic',
-  type: 'image',
-  src: 'hairstyles.png'
-  },
-  {
-    name: 'hair_fancy',
-    type: 'image',
-    src: 'hairstyles2.png'
-  },
-  {
-    name: 'eyes',
-    type: 'image',
-    src: 'eyes.png'
-  }
-];
+var male_base = new Image();
+male_base.crossOrigin = 'anonymous';
+male_base.src = './farmer_base.png';
 
-const shirtIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650, 651, 652, 653, 654, 655, 768, 769, 770, 771, 772, 773, 774, 775, 776, 777, 778, 779, 780, 781, 782, 783];
-const hairIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 24, 25, 26, 27, 28, 29, 30, 31, 48, 49, 50, 51, 52, 53, 54, 55, 72, 73, 74, 75, 76, 77, 78, 79, 96, 97, 98, 99, 100, 101, 102, 103, 120, 121, 122, 123, 124, 125, 126, 127, 144, 145, 146, 147, 148, 149, 150, 151];
-const hairFancyIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 32, 33, 34, 35, 36, 37, 38, 39, 64, 65];
-const accessoryIndexes = [0, 1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 21, 22, 23, 32, 33, 34, 35];
-me.device.onReady(function () {
-  // initialize the display canvas once the device/browser is ready
-  if (!me.video.init(64, 64, {parent: document.getElementById('preview'), scale: "auto", scaleMethod: "fit"})) {
-    alert("Your browser does not support HTML5 canvas.");
-    return;
-  }
-  
-  document.getElementsByTagName('canvas')[0].style.width = '256px';
-  document.getElementsByTagName('canvas')[0].style.height = '256px';
+var ctx = document.getElementById('male_base').getContext('2d');
+ctx.imageSmoothingEnabled = false;
+ctx.mozImageSmoothingEnabled = false;
+ctx.webkitImageSmoothingEnabled = false;
+ctx.msImageSmoothingEnabled = false;
 
-  me.loader.preload(resources, loaded);
+var armsCtx = document.getElementById('arms_canvas').getContext('2d');
+armsCtx.imageSmoothingEnabled = false;
+armsCtx.mozImageSmoothingEnabled = false;
+armsCtx.webkitImageSmoothingEnabled = false;
+armsCtx.msImageSmoothingEnabled = false;
+
+male_base.onload = function () {
+  ctx.drawImage(male_base, 0, 0, 16, 32, 64, 0, 128, 256);
+  armsCtx.drawImage(male_base, 96, 0, 16, 32, 64, 0, 128, 256);
+};
+
+var skin = new Image();
+skin.crossOrigin = 'anonymous';
+skin.src = './skinColors.png';
+var skinCanvas = document.getElementById('skin_canvas');
+var skinCtx = skinCanvas.getContext('2d');
+skin.onload = function () {
+  skinCanvas.height = skin.height;
+  skinCanvas.width = skin.width;
+  skinCtx.drawImage(skin, 0, 0);
+};
+var skIndex = 0;
+document.getElementById('skin').addEventListener('change', (e) => {
+  const imgData = skinCtx.getImageData(0, 0, skinCanvas.width, skinCanvas.height);
+  const data = imgData.data;
+  const prevOffset = skIndex * 12;
+  skIndex = e.target.value - 1;
+  const newOffset = skIndex * 12;
+  for (var i = 0; i < 12; i += 4) {
+    replaceColor(
+      ctx,
+      [data[prevOffset + i], data[prevOffset + i + 1], data[prevOffset + i + 2]],
+      [data[newOffset + i], data[newOffset + i + 1], data[newOffset + i + 2]]
+    );
+    replaceColor(
+      armsCtx,
+      [data[prevOffset + i], data[prevOffset + i + 1], data[prevOffset + i + 2]],
+      [data[newOffset + i], data[newOffset + i + 1], data[newOffset + i + 2]]
+    );
+  }
 });
 
-function loaded() {
-  document.getElementById('copy').addEventListener('click', () => {
-    const vals = [
-      document.getElementById('skin').value,
-      document.getElementById('hair').value,
-      document.getElementById('shirt').value,
-      document.getElementById('pant').value,
-      document.getElementById('accessory').value
-    ];
-    const eye_col = document.getElementById('eye_col').value;
-    vals.push(...rgb2hsv(
-      parseInt("0x" + eye_col.slice(1,3)) / 255,
-      parseInt("0x" + eye_col.slice(3,5)) / 255,
-      parseInt("0x" + eye_col.slice(5,7)) / 255
-    ));
-    const hair_col = document.getElementById('hair_col').value;
-    vals.push(...rgb2hsv(
-      parseInt("0x" + hair_col.slice(1,3)) / 255,
-      parseInt("0x" + hair_col.slice(3,5)) / 255,
-      parseInt("0x" + hair_col.slice(5,7)) / 255
-    ));
-    const pant_col = document.getElementById('pant_col').value;
-    vals.push(...rgb2hsv(
-      parseInt("0x" + pant_col.slice(1,3)) / 255,
-      parseInt("0x" + pant_col.slice(3,5)) / 255,
-      parseInt("0x" + pant_col.slice(5,7)) / 255
-    ));
-    vals.push(1);
-    navigator.clipboard.writeText(vals.join());
-  });
-  me.game.world.addChild(new me.ColorLayer("background", "#51a8f5"));
-  const male = new me.Sprite(32, 32, {
-    image: 'male',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  male.addAnimation('front', [0]);
-  male.setCurrentAnimation('front');
-  me.game.world.addChild(male);
-  
-  const eyes = new me.Sprite(32, 32, {
-    image: 'eyes',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  eyes.addAnimation('front', [0]);
-  eyes.setCurrentAnimation('front');
-  me.game.world.addChild(eyes);
-  
-  document.getElementById('eye_col').addEventListener('change', (e) => {
-    eyes.tint.setColor(
-      parseInt("0x" + e.target.value.slice(1,3)),
-      parseInt("0x" + e.target.value.slice(3,5)),
-      parseInt("0x" + e.target.value.slice(5,7))
-    );
-  });
-  
-  document.getElementById('eye_col').dispatchEvent(new Event('change'));
-  
-  const shirt = new me.Sprite(32, 35, {
-    image: 'shirt',
-    framewidth: 8,
-    frameheight: 8,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  shirtIndexes.forEach((frameIndex, index) => {
-    shirt.addAnimation(index + 1, [frameIndex]);
-  });
-  shirt.setCurrentAnimation(1);
-  me.game.world.addChild(shirt);
-  
-  document.getElementById('shirt').addEventListener('change', (e) => {
-    shirt.setCurrentAnimation(e.target.value);
-  });
-  
-  const pant = new me.Sprite(32, 32, {
-    image: 'pants',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  pant.addAnimation(1, [0]);
-  pant.addAnimation(2, [12]);
-  pant.addAnimation(3, [24]);
-  pant.addAnimation(4, [36]);
-  pant.setCurrentAnimation(1);
-  me.game.world.addChild(pant);
-  
-  document.getElementById('pant_col').addEventListener('change', (e) => {
-    pant.tint.setColor(
-      parseInt("0x" + e.target.value.slice(1,3)),
-      parseInt("0x" + e.target.value.slice(3,5)),
-      parseInt("0x" + e.target.value.slice(5,7))
-    );
-  });
-  
-  document.getElementById('pant').addEventListener('change', (e) => {
-    pant.setCurrentAnimation(e.target.value);
-  });
-  
-  document.getElementById('pant_col').dispatchEvent(new Event('change'));
-  
-  const arms = new me.Sprite(32, 32, {
-    image: 'male',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  arms.addAnimation('front', [6]);
-  arms.setCurrentAnimation('front');
-  me.game.world.addChild(arms);
-  
-  const hair = new me.Sprite(32, 33, {
-    image: 'hair_basic',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  hairIndexes.forEach((frameIndex, index) => {
-    hair.addAnimation(index + 1, [frameIndex]);
-  });
-  hair.setCurrentAnimation(1);
-  me.game.world.addChild(hair);
-  
-  const hairfancy = new me.Sprite(32, 33, {
-    image: 'hair_fancy',
-    framewidth: 16,
-    frameheight: 32,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  hairFancyIndexes.forEach((frameIndex, index) => {
-    hairfancy.addAnimation(index + hairIndexes.length + 1, [frameIndex]);
-  });
-  hairfancy.setCurrentAnimation(hairIndexes.length + 1);
-  hairfancy.alpha = 0;
-  me.game.world.addChild(hairfancy);
-  
-  document.getElementById('hair_col').addEventListener('change', (e) => {
-    hair.tint.setColor(
-      parseInt("0x" + e.target.value.slice(1,3)),
-      parseInt("0x" + e.target.value.slice(3,5)),
-      parseInt("0x" + e.target.value.slice(5,7))
-    );
-    hairfancy.tint.setColor(
-      parseInt("0x" + e.target.value.slice(1,3)),
-      parseInt("0x" + e.target.value.slice(3,5)),
-      parseInt("0x" + e.target.value.slice(5,7))
-    );
-    document.getElementById('accessory').dispatchEvent(new Event('change'));
-  });
-  
-  document.getElementById('hair').addEventListener('change', (e) => {
-    if (e.target.value > hairIndexes.length) {
-      hairfancy.setCurrentAnimation(e.target.value);
-      hair.alpha = 0;
-      hairfancy.alpha = 1;
-    } else {
-      hair.setCurrentAnimation(e.target.value);
-      hair.alpha = 1;
-      hairfancy.alpha = 0;
+var pants = new Image();
+pants.crossOrigin = 'anonymous';
+pants.src = './pants.png';
+var pantsCtx = document.getElementById('pants_canvas').getContext('2d');
+pantsCtx.imageSmoothingEnabled = false;
+pantsCtx.mozImageSmoothingEnabled = false;
+pantsCtx.webkitImageSmoothingEnabled = false;
+pantsCtx.msImageSmoothingEnabled = false;
+pants.onload = function () {
+  pantsCtx.drawImage(pants, 0, 0, 16, 32, 64, 0, 128, 256);
+  tint(pantsCtx, document.getElementById('pant_col').value);
+};
+document.getElementById('pant_col').addEventListener('change', (e) => {
+  pantsCtx.clearRect(0, 0, 256, 256);
+  const index = document.getElementById('pant').value - 1;
+  const xOffset = index * 192;
+  pantsCtx.drawImage(pants, xOffset, 0, 16, 32, 64, 0, 128, 256);
+  tint(pantsCtx, e.target.value);
+});
+document.getElementById('pant').addEventListener('change', (e) => {
+  pantsCtx.clearRect(0, 0, 256, 256);
+  const index = e.target.value - 1;
+  const xOffset = index * 192;
+  pantsCtx.drawImage(pants, xOffset, 0, 16, 32, 64, 0, 128, 256);
+  tint(pantsCtx, document.getElementById('pant_col').value);
+});
+
+var shirt = new Image();
+shirt.crossOrigin = 'anonymous';
+shirt.src = './shirts.png';
+var shirtCtx = document.getElementById('shirt_canvas').getContext('2d');
+shirtCtx.imageSmoothingEnabled = false;
+shirtCtx.mozImageSmoothingEnabled = false;
+shirtCtx.webkitImageSmoothingEnabled = false;
+shirtCtx.msImageSmoothingEnabled = false;
+shirt.onload = function () {
+  shirtCtx.drawImage(shirt, 0, 0, 8, 8, 96, 120, 64, 64);
+};
+var shirtCols = [[142, 31, 12], [112, 23, 24], [74, 12, 6]];
+document.getElementById('shirt').addEventListener('change', (e) => {
+  shirtCtx.clearRect(0, 0, 256, 256);
+  const index = e.target.value - 1;
+  const xOffset = (index % 16) * 8;
+  const yOffset = parseInt(index / 16) * 32;
+  shirtCtx.drawImage(shirt, xOffset, yOffset, 8, 8, 96, 120, 64, 64);
+  const imgData = shirtCtx.getImageData(96, 143, 1, 3);
+  const data = imgData.data;
+  replaceColor(
+    armsCtx,
+    shirtCols[0],
+    [data[0], data[1], data[2]]
+  );
+  replaceColor(
+    armsCtx,
+    shirtCols[1],
+    [data[4], data[5], data[6]]
+  );
+  replaceColor(
+    armsCtx,
+    shirtCols[2],
+    [data[8], data[9], data[10]]
+  );
+  shirtCols = [[data[0], data[1], data[2]], [data[4], data[5], data[6]], [data[8], data[9], data[10]]];
+});
+
+var eyes = new Image();
+eyes.crossOrigin = 'anonymous';
+eyes.src = './eyes.png';
+var eyesCtx = document.getElementById('eyes_canvas').getContext('2d');
+eyesCtx.imageSmoothingEnabled = false;
+eyesCtx.mozImageSmoothingEnabled = false;
+eyesCtx.webkitImageSmoothingEnabled = false;
+eyesCtx.msImageSmoothingEnabled = false;
+eyes.onload = function () {
+  eyesCtx.drawImage(eyes, 0, 0, 16, 32, 64, 0, 128, 256);
+  tint(eyesCtx, document.getElementById('eye_col').value);
+};
+document.getElementById('eye_col').addEventListener('change', (e) => {
+  eyesCtx.drawImage(eyes, 0, 0, 16, 32, 64, 0, 128, 256);
+  tint(eyesCtx, e.target.value);
+});
+
+var hair = new Image();
+hair.crossOrigin = 'anonymous';
+hair.src = './hairstyles.png';
+var hairfancy = new Image();
+hairfancy.crossOrigin = 'anonymous';
+hairfancy.src = './hairstyles2.png';
+var hairCtx = document.getElementById('hair_canvas').getContext('2d');
+hairCtx.imageSmoothingEnabled = false;
+hairCtx.mozImageSmoothingEnabled = false;
+hairCtx.webkitImageSmoothingEnabled = false;
+hairCtx.msImageSmoothingEnabled = false;
+hair.onload = function () {
+  hairCtx.drawImage(hair, 0, 0, 16, 32, 64, 8, 128, 256);
+  tint(hairCtx, document.getElementById('hair_col').value);
+};
+document.getElementById('hair_col').addEventListener('change', (e) => {
+  hairCtx.clearRect(0, 0, 256, 256);
+  var fancy = false;
+  var index = document.getElementById('hair').value - 1;
+  if (index > 55) {
+    index = index - 56;
+    fancy = true;
+  }
+  const xOffset = (index % 8) * 16;
+  const yOffset = parseInt(index / 8) * (fancy ? 128 : 96);
+  hairCtx.drawImage(fancy ? hairfancy : hair, xOffset, yOffset, 16, 32, 64, fancy ? 0 : 8, 128, 256);
+  tint(hairCtx, e.target.value);
+});
+document.getElementById('hair').addEventListener('change', (e) => {
+  hairCtx.clearRect(0, 0, 256, 256);
+  var fancy = false;
+  var index = e.target.value - 1;
+  if (index > 55) {
+    index = index - 56;
+    fancy = true;
+  }
+  const xOffset = (index % 8) * 16;
+  const yOffset = parseInt(index / 8) * (fancy ? 128 : 96);
+  hairCtx.drawImage(fancy ? hairfancy : hair, xOffset, yOffset, 16, 32, 64, fancy ? 0 : 8, 128, 256);
+  tint(hairCtx, document.getElementById('hair_col').value);
+});
+
+var accessory = new Image();
+accessory.crossOrigin = 'anonymous';
+accessory.src = './accessories.png';
+var accessoryCtx = document.getElementById('accessory_canvas').getContext('2d');
+accessoryCtx.imageSmoothingEnabled = false;
+accessoryCtx.mozImageSmoothingEnabled = false;
+accessoryCtx.webkitImageSmoothingEnabled = false;
+accessoryCtx.msImageSmoothingEnabled = false;
+document.getElementById('accessory').addEventListener('change', (e) => {
+  accessoryCtx.clearRect(0, 0, 256, 256);
+  const index = e.target.value - 2;
+  if (index < 0) {
+    return;
+  }
+  const xOffset = (index % 8) * 16;
+  const yOffset = parseInt(index / 8) * 32;
+  console.log(index, xOffset, yOffset);
+  accessoryCtx.drawImage(accessory, xOffset, yOffset, 16, 16, 64, 16, 128, 128);
+  if (index < 6) {
+    tint(accessoryCtx, document.getElementById('hair_col').value);
+  }
+});
+
+document.getElementById('copy').addEventListener('click', () => {
+  const vals = [
+    document.getElementById('skin').value,
+    document.getElementById('hair').value,
+    document.getElementById('shirt').value,
+    document.getElementById('pant').value,
+    document.getElementById('accessory').value
+  ];
+  const eye_col = document.getElementById('eye_col').value;
+  vals.push(...rgb2hsv(
+    parseInt("0x" + eye_col.slice(1,3)) / 255,
+    parseInt("0x" + eye_col.slice(3,5)) / 255,
+    parseInt("0x" + eye_col.slice(5,7)) / 255
+  ));
+  const hair_col = document.getElementById('hair_col').value;
+  vals.push(...rgb2hsv(
+    parseInt("0x" + hair_col.slice(1,3)) / 255,
+    parseInt("0x" + hair_col.slice(3,5)) / 255,
+    parseInt("0x" + hair_col.slice(5,7)) / 255
+  ));
+  const pant_col = document.getElementById('pant_col').value;
+  vals.push(...rgb2hsv(
+    parseInt("0x" + pant_col.slice(1,3)) / 255,
+    parseInt("0x" + pant_col.slice(3,5)) / 255,
+    parseInt("0x" + pant_col.slice(5,7)) / 255
+  ));
+  vals.push(1);
+  navigator.clipboard.writeText(vals.join());
+});
+
+function tint(ctx, hex) {
+  const r = parseInt("0x" + hex.slice(1,3));
+  const g = parseInt("0x" + hex.slice(3,5));
+  const b = parseInt("0x" + hex.slice(5,7));
+  const imgData = ctx.getImageData(0, 0, 256, 256);
+  const data = imgData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    if (data[i + 3] !== 0) {
+      data[i] = parseInt(((data[i] / 255) * (r / 255)) * 255);
+      data[i + 1] = parseInt(((data[i + 1] / 255) * (g / 255)) * 255);
+      data[i + 2] = parseInt(((data[i + 2] / 255) * (b / 255)) * 255);
     }
-  });
-  
-  document.getElementById('hair_col').dispatchEvent(new Event('change'));
-  
-  const accessory = new me.Sprite(32, 26, {
-    image: 'accessory',
-    framewidth: 16,
-    frameheight: 16,
-    anchorPoint: new me.Vector2d(0.5, 0.5)
-  });
-  accessoryIndexes.forEach((frameIndex, index) => {
-    accessory.addAnimation(index + 2, [frameIndex]);
-  });
-  accessory.setCurrentAnimation(21);
-  me.game.world.addChild(accessory);
-  
-  document.getElementById('accessory').addEventListener('change', (e) => {
-    if (e.target.value === '1') {
-      accessory.setCurrentAnimation(21);
-      accessory.tint.setColor(255, 255, 255);
-    } else {
-      if (e.target.value < 8) {
-        const hair_col = document.getElementById('hair_col').value;
-        accessory.tint.setColor(
-          parseInt("0x" + hair_col.slice(1,3)),
-          parseInt("0x" + hair_col.slice(3,5)),
-          parseInt("0x" + hair_col.slice(5,7))
-        );
-      } else {
-        accessory.tint.setColor(255, 255, 255);
-      }
-      accessory.setCurrentAnimation(e.target.value);
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+function replaceColor(ctx, prevRGB, newRGB) {
+  const imgData = ctx.getImageData(0, 0, 256, 256);
+  const data = imgData.data;
+  for (var i = 0; i < data.length; i += 4) {
+    if (data[i + 3] !== 0 && data[i] === prevRGB[0] && data[i + 1] === prevRGB[1] && data[i + 2] === prevRGB[2]) {
+      data[i] = newRGB[0];
+      data[i + 1] = newRGB[1];
+      data[i + 2] = newRGB[2];
     }
-  });
+  }
+  ctx.putImageData(imgData, 0, 0);
 }
 
 function rgb2hsv(r,g,b) {
