@@ -229,7 +229,6 @@ document.getElementById('accessory').addEventListener('change', (e) => {
   }
   const xOffset = (index % 8) * 16;
   const yOffset = parseInt(index / 8) * 32;
-  console.log(index, xOffset, yOffset);
   accessoryCtx.drawImage(accessory, xOffset, yOffset, 16, 16, 64, 16, 128, 128);
   if (index < 6) {
     tint(accessoryCtx, document.getElementById('hair_col').value);
