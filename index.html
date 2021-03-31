@@ -134,24 +134,28 @@ document.getElementById('shirt').addEventListener('change', (e) => {
   const xOffset = (index % 16) * 8;
   const yOffset = parseInt(index / 16) * 32;
   shirtCtx.drawImage(shirt, xOffset, yOffset, 8, 8, 96, 120, 64, 64);
-  const imgData = shirtCtx.getImageData(96, 143, 1, 3);
-  const data = imgData.data;
+  var data = shirtCtx.getImageData(96, 136, 1, 1).data;
+  const newShirtCols = [[data[0], data[1], data[2]]];
   replaceColor(
     armsCtx,
     shirtCols[0],
-    [data[0], data[1], data[2]]
+    newShirtCols[0]
   );
+  data = shirtCtx.getImageData(96, 144, 1, 1).data;
+  newShirtCols.push([data[0], data[1], data[2]]);
   replaceColor(
     armsCtx,
     shirtCols[1],
-    [data[4], data[5], data[6]]
+    newShirtCols[1]
   );
+  data = shirtCtx.getImageData(96, 152, 1, 1).data;
+  newShirtCols.push([data[0], data[1], data[2]]);
   replaceColor(
     armsCtx,
     shirtCols[2],
-    [data[8], data[9], data[10]]
+    newShirtCols[2]
   );
-  shirtCols = [[data[0], data[1], data[2]], [data[4], data[5], data[6]], [data[8], data[9], data[10]]];
+  shirtCols = newShirtCols;
 });
 
 var eyes = new Image();
@@ -302,3 +306,4 @@ function rgb2hsv(r,g,b) {
 </script>
   </body>
 </html>
+
