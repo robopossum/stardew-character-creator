@@ -301,7 +301,7 @@ function replaceColor(ctx, prevRGB, newRGB) {
 function rgb2hsv(r,g,b) {
   let v=Math.max(r,g,b), c=v-Math.min(r,g,b);
   let h= c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
-  return [parseInt(((60*(h<0?h+6:h)) / 360) * 100), parseInt((v&&c/v) * 100), parseInt(v * 100)];
+  return [parseInt(((60*(h<0?h+6:h)) / 360) * 99), parseInt((v&&c/v) * 99), parseInt(v * 99)];
 }
 </script>
   </body>
