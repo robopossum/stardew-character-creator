@@ -22,15 +22,15 @@
         <label for="pant_col">Pants color</label>
         <input name="pant_col" id="pant_col" type="color" value="#2e55b7">
         <label for="skin">Skin</label>
-        <input type="number" name="skin" id="skin" value="1" min="1" max="24">
+        <input type="number" name="skin" id="skin" value="1" min="1" max="24" oninput="checkValue(this);">
         <label for="hair">Hair</label>
-        <input type="number" name="hair" id="hair" value="1" min="1" max="74">
+        <input type="number" name="hair" id="hair" value="1" min="1" max="74" oninput="checkValue(this);">
         <label for="shirt">Shirt</label>
-        <input type="number" name="shirt" id="shirt" value="1" min="1" max="112">
+        <input type="number" name="shirt" id="shirt" value="1" min="1" max="112" oninput="checkValue(this);">
         <label for="pant">Pants</label>
-        <input type="number" name="pant" id="pant" value="1" min="1" max="4">
-        <label for="pant">Accessory</label>
-        <input type="number" name="accessory" id="accessory" value="1" min="1" max="20">
+        <input type="number" name="pant" id="pant" value="1" min="1" max="4" oninput="checkValue(this);">
+        <label for="accessory">Accessory</label>
+        <input type="number" name="accessory" id="accessory" value="1" min="1" max="20" oninput="checkValue(this);">
         <button id="copy">Copy to clipboard</button>
         <p><a href="https://github.com/robopossum/stardew-character-creator">Source</a></p>
         <p><a href="https://github.com/robopossum/stardew-character-creator/issues">Submit a bug</a></p>
@@ -303,6 +303,36 @@ function rgb2hsv(r,g,b) {
   let h= c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
   return [parseInt(((60*(h<0?h+6:h)) / 360) * 99), parseInt((v&&c/v) * 99), parseInt(v * 99)];
 }
+
+// this function will convert a string to an integer
+// beware this will throw an exception if the value does not parse properly
+function int(value) {
+    return parseInt(value);
+}
+
+// this checks the value and updates it on the control, if needed
+function checkValue(sender) {
+    let min = sender.min;
+    let max = sender.max;
+    let value = int(sender.value);
+    if (value > max) {
+        sender.value = min;
+    } else if (value < min) {
+        sender.value = max;
+    }
+}
+
+    function populateIcons(category) {
+        var icons = [];
+        folder = Folder("images/" + category);
+        files = folder.getFiles();
+        count = files.length;
+        for (i = 0; i < count; i++) {
+            icons.push({ 'iconFilePath': 'images/' + category + '/' + (i + 1).toString() + '.png', 'iconValue': (i + 1).toString() });
+        }
+    }
+
+
 </script>
   </body>
 </html>
