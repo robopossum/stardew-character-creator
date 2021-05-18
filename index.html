@@ -316,9 +316,9 @@ function checkValue(sender) {
     let max = sender.max;
     let value = int(sender.value);
     if (value > max) {
-        sender.value = min;
-    } else if (value < min) {
         sender.value = max;
+    } else if (value < min) {
+        sender.value = min;
     }
 }
 
