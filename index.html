@@ -322,16 +322,6 @@ function checkValue(sender) {
     }
 }
 
-    function populateIcons(category) {
-        var icons = [];
-        folder = Folder("images/" + category);
-        files = folder.getFiles();
-        count = files.length;
-        for (i = 0; i < count; i++) {
-            icons.push({ 'iconFilePath': 'images/' + category + '/' + (i + 1).toString() + '.png', 'iconValue': (i + 1).toString() });
-        }
-    }
-
 
 </script>
   </body>
