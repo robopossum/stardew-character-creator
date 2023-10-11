@@ -1,9 +1,9 @@
-const ghpages = require('gh-pages');
+import ghpages from 'gh-pages';
 
 ghpages.publish(
   'public',
   {
-    branch: 'svelte',
+    branch: 'gh-pages',
     repo: 'https://github.com/robopossum/stardew-character-creator.git',
     user: {
       name: 'robopossum'
