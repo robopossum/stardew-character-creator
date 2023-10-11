@@ -1,6 +1,6 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { tint } from "./utils";
+    import { tint, getContext } from "./utils";
 
     export let id;
     export let color;
@@ -10,12 +10,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         hairSprite.callbacks.push(() => draw());
         hairFancySprite.callbacks.push(() => draw());

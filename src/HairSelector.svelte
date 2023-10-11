@@ -1,6 +1,8 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { tint } from "./utils";
+    import Arrow from './Arrow.svelte';
+    import Line from './Line.svelte';
+    import { tint, getContext, fadeIn, fadeOut } from "./utils";
 
     export let hairId;
     export let hairColor;
@@ -10,12 +12,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         hairSprite.callbacks.push(() => draw());
         hairFancySprite.callbacks.push(() => draw());
@@ -38,13 +35,8 @@
         drawHair(index + 2, 4);
 
         tint(ctx, hairColor, [0, 0, 640, 128]);
-
-        const imageData = ctx.getImageData(0, 0, 128, 128);
-        const data = imageData.data;
-        for (let i = 0; i < data.length; i+= 4) {
-            data[i+3] = data[i+3] === 0 ? 0 : ((i / 4) % 128);
-        }
-        ctx.putImageData(imageData, 0, 0);
+        fadeIn(ctx);
+        fadeOut(ctx);
     };
 
     const drawHair = (index, position) => {
@@ -59,18 +51,30 @@
     };
 
     let correctHairId = () => hairId = (hairId < 1 ? 78 + hairId : hairId) % 79;
+
+    let reduceHair = () => hairId = ((hairId + 77) % 79) + 1;
+
+    let increaseHair = () => hairId = (hairId % 79) + 1;
 </script>
 
-<div>
-    <canvas bind:this={canvasElement} width=640 height=128 />
-    <input type="number" bind:value={hairId} on:change={correctHairId} min="0" max="80"/>
+<div class="outer">
+    <div class="inner">
+        <Arrow onclick={reduceHair} dir="left"/>
+        <Line />
+        <canvas bind:this={canvasElement} width=640 height=128 />
+        <Arrow onclick={increaseHair} dir="right"/>
+    </div>
+    <input type="number" bind:value={hairId} on:change={correctHairId} min="0" max="79"/>
     <input type="color" bind:value={hairColor} />
 </div>
 
 <style>
-    div {
+    .outer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .inner {
+        position: relative;
     }
 </style>

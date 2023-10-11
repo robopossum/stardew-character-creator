@@ -29,6 +29,16 @@ export function replaceColor(ctx, prevRGB, newRGB, bounds = [0, 0, 256, 256]) {
   ctx.putImageData(imgData, bounds[0], bounds[1]);
 };
 
+export function rgb2hsv(color) {
+  const r = parseInt("0x" + color.slice(1, 3)) / 255;
+  const g = parseInt("0x" + color.slice(3, 5)) / 255;
+  const b = parseInt("0x" + color.slice(5, 7)) / 255;
+
+  const v = Math.max(r,g,b), c=v-Math.min(r,g,b);
+  let h=c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
+  return [parseInt(((60*(h<0?h+6:h)) / 360) * 99), parseInt((v&&c/v) * 99), parseInt(v * 99)];
+};
+
 export function loadImage(sprite) {
   let img = new Image();
   img.crossOrigin = 'anonymous';
@@ -39,4 +49,35 @@ export function loadImage(sprite) {
   };
 
   return img;
+};
+
+export function getContext(canvas) {
+  const ctx = canvas.getContext("2d", {willReadFrequently: true})
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.mozImageSmoothingEnabled = false;
+  ctx.webkitImageSmoothingEnabled = false;
+  ctx.msImageSmoothingEnabled = false;
+
+  return ctx;
+};
+
+export function fadeIn(ctx, bounds = [0, 0, 128, 128]) {
+  const width = bounds[2] - bounds[0];
+  const imageData = ctx.getImageData(...bounds);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i+= 4) {
+    data[i+3] = data[i+3] === 0 ? 0 : ((i / 4) % width);
+  }
+  ctx.putImageData(imageData, bounds[0], bounds[1]);
+};
+
+export function fadeOut(ctx, bounds = [512, 0, 640, 128]) {
+  const width = bounds[2] - bounds[0];
+  const imageData = ctx.getImageData(...bounds);
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i+= 4) {
+    data[i+3] = data[i+3] === 0 ? 0 : (width - ((i / 4) % width));
+  }
+  ctx.putImageData(imageData, bounds[0], bounds[1]);
 };

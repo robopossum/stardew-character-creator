@@ -1,6 +1,8 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { replaceColor } from "./utils";
+    import Arrow from './Arrow.svelte';
+    import Line from './Line.svelte';
+    import { replaceColor, getContext, fadeIn, fadeOut } from "./utils";
 
     export let skinId;
     export let bodySprite;
@@ -10,12 +12,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         bodySprite.callbacks.push(() => draw());
         draw();
@@ -35,6 +32,9 @@
         drawHead(index + 0, 2);
         drawHead(index + 1, 3);
         drawHead(index + 2, 4);
+
+        fadeIn(ctx);
+        fadeOut(ctx);
     };
 
     const drawHead = (index, position) => {
@@ -58,18 +58,30 @@
     };
 
     let correctSkinId = () => skinId = Math.min(Math.max(skinId, 1), 24);
+
+    let reduceSkin = () => skinId = ((skinId + 22) % 24) + 1;
+
+    let increaseSkin = () => skinId = (skinId % 24) + 1;
 </script>
 
-<div>
-    <canvas bind:this={canvasElement} width=640 height=128 />
+<div class="outer">
+    <div class="inner">
+        <Arrow onclick={reduceSkin} dir="left"/>
+        <Line />
+        <canvas bind:this={canvasElement} width=640 height=128 />
+        <Arrow onclick={increaseSkin} dir="right"/>
+    </div>
     <input type="number" bind:value={skinId} on:change={correctSkinId} min="1" max="24"/>
     <input type="color" bind:value={eyeColor} />
 </div>
 
 <style>
-    div {
+    .outer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .inner {
+        position: relative;
     }
 </style>

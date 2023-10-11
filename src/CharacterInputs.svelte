@@ -66,6 +66,7 @@
 <style>
     div {
         display:flex;
+        position: relative;
         flex-direction: column;
         background-color: #ecaa67;
         padding: 1em;

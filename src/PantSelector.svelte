@@ -1,6 +1,8 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { replaceColor, tint } from "./utils";
+    import Arrow from './Arrow.svelte';
+    import Line from './Line.svelte';
+    import { tint, getContext, fadeIn, fadeOut } from "./utils";
 
     export let pantId;
     export let pantColor;
@@ -9,12 +11,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         pantSprite.callbacks.push(() => draw());
         draw();
@@ -36,6 +33,9 @@
         drawPant(index + 2, 4);
 
         tint(ctx, pantColor, [0, 0, 640, 128]);
+
+        fadeIn(ctx);
+        fadeOut(ctx);
     };
 
     const drawPant = (index, position) => {
@@ -47,18 +47,30 @@
     };
 
     let correctPantId = () => pantId = Math.min(Math.max(pantId, 1), 4);
+
+    let reducePant = () => pantId = ((pantId + 2) % 4) + 1;
+
+    let increasePant = () => pantId = (pantId % 4) + 1;
 </script>
 
-<div>
-    <canvas bind:this={canvasElement} width=640 height=128/>
+<div class="outer">
+    <div class="inner">
+        <Arrow onclick={reducePant} dir="left"/>
+        <Line />
+        <canvas bind:this={canvasElement} width=640 height=128/>
+        <Arrow onclick={increasePant} dir="right"/>
+    </div>
     <input type="color" bind:value={pantColor} />
     <input type="number" bind:value={pantId} on:change={correctPantId} min="1" max="4"/>
 </div>
 
 <style>
-    div {
+    .outer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .inner {
+        position: relative;
     }
 </style>

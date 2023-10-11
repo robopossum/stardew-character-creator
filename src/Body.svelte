@@ -1,6 +1,6 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { replaceColor } from "./utils";
+    import { replaceColor, getContext } from "./utils";
 
     export let skinId;
     export let armColor;
@@ -14,12 +14,7 @@
     let ctx;
 
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         bodySprite.callbacks.push(() => draw());
         draw();

@@ -1,5 +1,6 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
+    import { getContext } from "./utils";
 
     export let id;
     export let sleeves;
@@ -8,12 +9,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         shirtSprite.callbacks.push(() => draw());
         draw();

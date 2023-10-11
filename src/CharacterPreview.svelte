@@ -32,25 +32,39 @@
     export let accessorySprite;
 </script>
 
-<div>
-    <Body
-        skinId={skinId}
-        armColor={armColor}
-        bodySprite={bodySprite}
-        skinSprite={skinSprite}
-        bind:skinColors={skinColors}
-        bind:skinData={skinData}
-    />
-    <Eyes color={eyeColor} eyeSprite={eyeSprite} />
-    <Hair color={hairColor} id={hairId} hairSprite={hairSprite} hairFancySprite={hairFancySprite} />
-    <Pants color={pantColor} id={pantId} pantSprite={pantSprite} />
-    <Shirt id={shirtId} bind:sleeves={armColor} shirtSprite={shirtSprite} />
-    <Accessory id={accessoryId} hairColor={hairColor} accessorySprite={accessorySprite} />
+<div class="outer">
+    <img src="./background.png" alt="Chracter background"/>
+    <div class="inner">
+        <Body
+            skinId={skinId}
+            armColor={armColor}
+            bodySprite={bodySprite}
+            skinSprite={skinSprite}
+            bind:skinColors={skinColors}
+            bind:skinData={skinData}
+        />
+        <Eyes color={eyeColor} eyeSprite={eyeSprite} />
+        <Hair color={hairColor} id={hairId} hairSprite={hairSprite} hairFancySprite={hairFancySprite} />
+        <Pants color={pantColor} id={pantId} pantSprite={pantSprite} />
+        <Shirt id={shirtId} bind:sleeves={armColor} shirtSprite={shirtSprite} />
+        <Accessory id={accessoryId} hairColor={hairColor} accessorySprite={accessorySprite} />
+    </div>
 </div>
 
 <style>
-    div {
+    .outer {
         width: 256px;
-        height: 256px;
+        height: 384px;
+        position: relative;
+        margin: 10px 0 20px 0px;
+    }
+    .inner {
+        position: absolute;
+        top: 64px;
+    }
+    img {
+        position: absolute;
+        width: 256px;
+        height: 384px;
     }
 </style>

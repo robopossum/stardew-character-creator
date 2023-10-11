@@ -1,6 +1,8 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { replaceColor } from "./utils";
+    import Arrow from './Arrow.svelte';
+    import Line from './Line.svelte';
+    import { replaceColor, getContext, fadeIn, fadeOut } from "./utils";
 
     export let shirtId;
     export let shirtSprite;
@@ -10,12 +12,7 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         shirtSprite.callbacks.push(() => draw());
         bodySprite.callbacks.push(() => draw());
@@ -36,6 +33,9 @@
         drawShirt(index + 0, 2);
         drawShirt(index + 1, 3);
         drawShirt(index + 2, 4);
+
+        fadeIn(ctx);
+        fadeOut(ctx);
 
         if (!skinColors) {
             return;
@@ -93,17 +93,29 @@
     };
 
     let correctShirtId = () => shirtId = Math.min(Math.max(shirtId, 1), 112);
+
+    let reduceShirt = () => shirtId = ((shirtId + 110) % 112) + 1;
+
+    let increaseShirt = () => shirtId = (shirtId % 112) + 1;
 </script>
 
-<div>
-    <canvas bind:this={canvasElement} width=640 height=128 />
+<div class="outer">
+    <div class="inner">
+        <Arrow onclick={reduceShirt} dir="left"/>
+        <Line />
+        <canvas bind:this={canvasElement} width=640 height=128 />
+        <Arrow onclick={increaseShirt} dir="right"/>
+    </div>
     <input type="number" bind:value={shirtId} on:change={correctShirtId} min="1" max="112"/>
 </div>
 
 <style>
-    div {
+    .outer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .inner {
+        position: relative;
     }
 </style>

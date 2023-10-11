@@ -1,6 +1,8 @@
 <script>
     import { afterUpdate, onMount } from "svelte";
-    import { replaceColor, tint } from "./utils";
+    import Arrow from './Arrow.svelte';
+    import Line from './Line.svelte';
+    import { replaceColor, tint, getContext, fadeIn, fadeOut } from "./utils";
 
     export let skinId;
     export let bodySprite;
@@ -16,19 +18,9 @@
     let canvasElement;
     let ctx;
     onMount(() => {
-        skinCtx = skinCanvas.getContext("2d")
+        skinCtx = getContext(skinCanvas)
 
-        skinCtx.imageSmoothingEnabled = false;
-        skinCtx.mozImageSmoothingEnabled = false;
-        skinCtx.webkitImageSmoothingEnabled = false;
-        skinCtx.msImageSmoothingEnabled = false;
-
-        ctx = canvasElement.getContext("2d")
-
-        ctx.imageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.msImageSmoothingEnabled = false;
+        ctx = getContext(canvasElement)
 
         bodySprite.callbacks.push(() => draw());
         accessorySprite.callbacks.push(() => draw());
@@ -51,7 +43,12 @@
         drawAccessory(index - 1, 1);
         drawAccessory(index + 0, 2);
         drawAccessory(index + 1, 3);
-        drawAccessory(index + 2, 4); 
+        drawAccessory(index + 2, 4);
+
+        fadeIn(ctx);
+        fadeIn(skinCtx);
+        fadeOut(ctx);
+        fadeOut(skinCtx);
     };
 
     const drawAccessory = (index, position) => {
@@ -90,18 +87,30 @@
     };
 
     let correctAccessoryId = () => accessoryId = Math.min(Math.max(accessoryId, 1), 20);
+
+    let reduceAccessory = () => accessoryId = ((accessoryId + 18) % 20) + 1;
+
+    let increaseAccessory = () => accessoryId = (accessoryId % 20) + 1;
 </script>
 
-<div>
-    <canvas bind:this={skinCanvas} width=640 height=128 style="position: absolute"/>
-    <canvas bind:this={canvasElement} width=640 height=128 style="z-index: 100"/>
+<div class="outer">
+    <div class="inner">
+        <Arrow onclick={reduceAccessory} dir="left"/>
+        <Line />
+        <canvas bind:this={skinCanvas} width=640 height=128 style="position: absolute"/>
+        <canvas bind:this={canvasElement} width=640 height=128 style="position: relative; z-index: 100"/>
+        <Arrow onclick={increaseAccessory} dir="right"/>
+    </div>
     <input type="number" bind:value={accessoryId} on:change={correctAccessoryId} min="1" max="20"/>
 </div>
 
 <style>
-    div {
+    .outer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .inner {
+        position: relative;
     }
 </style>
