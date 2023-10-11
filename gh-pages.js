@@ -3,7 +3,7 @@ const ghpages = require('gh-pages');
 ghpages.publish(
   'public',
   {
-    branch: 'main',
+    branch: 'svelte',
     repo: 'https://github.com/robopossum/stardew-character-creator.git',
     user: {
       name: 'robopossum'
