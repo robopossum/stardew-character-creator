@@ -74,7 +74,7 @@
             <input value={output.join()} />
             <button on:click={copyToClipboard} style="cursor: pointer">Copy to Clipboard</button>
             <div class="links">
-                <a href="https://github.com/robopossum/stardew-character-creator">Source</a>
+                <a href="https://github.com/robopossum/stardew-character-creator">Source</a>-
                 <a href="https://github.com/robopossum/stardew-character-creator/issues">Submit a bug</a>
             </div>
         </div>
