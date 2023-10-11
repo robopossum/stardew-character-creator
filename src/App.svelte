@@ -1,45 +1,48 @@
 <script>
     import CharacterPreview from './CharacterPreview.svelte';
     import CharacterInputs from './CharacterInputs.svelte';
+    import BoringInputs from './BoringInputs.svelte';
     import { loadImage, rgb2hsv } from './utils';
 
-    let hairColor;
-    let hairId;
+    let hairColor = '#c15b32';
+    let hairId = 1;
     let hairSprite = loadImage('hairstyles');
     let hairFancySprite = loadImage('hairstyles2');
 
-    let eyeColor;
+    let eyeColor = '#7a4434';
     let eyeSprite = loadImage('eyes');
 
-    let skinId;
+    let skinId = 1;
     let bodySprite = loadImage('farmer_base');
     let skinSprite = loadImage('skinColors');
     let skinColors;
     let skinData;
 
-    let shirtId;
+    let shirtId = 1;
     let shirtSprite = loadImage('shirts');
 
-    let pantColor;
-    let pantId;
+    let pantColor = '#2e55b7';
+    let pantId = 1;
     let pantSprite = loadImage('pants');
 
-    let accessoryId;
+    let accessoryId = 1;
     let accessorySprite = loadImage('accessories');
 
-    let copyToClipboard = () => {
-        navigator.clipboard.writeText([
-            skinId,
-            hairId,
-            shirtId,
-            pantId,
-            accessoryId,
-            ...rgb2hsv(eyeColor),
-            ...rgb2hsv(hairColor),
-            ...rgb2hsv(pantColor),
-            1
-        ])
-    };
+    let petId = 1;
+
+    $: output = [
+        skinId,
+        hairId,
+        shirtId,
+        pantId,
+        accessoryId,
+        ...rgb2hsv(eyeColor),
+        ...rgb2hsv(hairColor),
+        ...rgb2hsv(pantColor),
+        petId
+    ];
+
+    let copyToClipboard = () => navigator.clipboard.writeText(output);
 </script>
 
 <main>
@@ -63,11 +66,13 @@
             pantSprite={pantSprite}
             accessoryId={accessoryId}
             accessorySprite={accessorySprite}
+            bind:petId={petId}
         />
 
         <div class="waffle">
             <p><b>Stardew valley character creator</b></p>
-            <button on:click={copyToClipboard}>Copy to Clipboard</button>
+            <input value={output.join()} />
+            <button on:click={copyToClipboard} style="cursor: pointer">Copy to Clipboard</button>
             <div class="links">
                 <a href="https://github.com/robopossum/stardew-character-creator">Source</a>
                 <a href="https://github.com/robopossum/stardew-character-creator/issues">Submit a bug</a>
@@ -91,6 +96,17 @@
         pantSprite={pantSprite}
         bind:accessoryId={accessoryId}
         accessorySprite={accessorySprite}
+    />
+
+    <BoringInputs
+        bind:hairColor={hairColor}
+        bind:hairId={hairId}
+        bind:eyeColor={eyeColor}
+        bind:skinId={skinId}
+        bind:shirtId={shirtId}
+        bind:pantColor={pantColor}
+        bind:pantId={pantId}
+        bind:accessoryId={accessoryId}
     />
 </main>
 

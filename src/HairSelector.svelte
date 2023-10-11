@@ -50,8 +50,6 @@
         ctx.drawImage(fancy ? hairFancySprite : hairSprite, xOffset, yOffset, 16, 32, position * 128, fancy ? -24 : -16, 128, 256);
     };
 
-    let correctHairId = () => hairId = (hairId < 1 ? 78 + hairId : hairId) % 79;
-
     let reduceHair = () => hairId = ((hairId + 77) % 79) + 1;
 
     let increaseHair = () => hairId = (hairId % 79) + 1;
@@ -64,8 +62,6 @@
         <canvas bind:this={canvasElement} width=640 height=128 />
         <Arrow onclick={increaseHair} dir="right"/>
     </div>
-    <input type="number" bind:value={hairId} on:change={correctHairId} min="0" max="79"/>
-    <input type="color" bind:value={hairColor} />
 </div>
 
 <style>

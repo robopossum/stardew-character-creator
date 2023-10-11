@@ -46,8 +46,6 @@
         ctx.drawImage(pantSprite, index * 192, 0, 16, 32, position * 128, -128, 128, 256);
     };
 
-    let correctPantId = () => pantId = Math.min(Math.max(pantId, 1), 4);
-
     let reducePant = () => pantId = ((pantId + 2) % 4) + 1;
 
     let increasePant = () => pantId = (pantId % 4) + 1;
@@ -60,8 +58,6 @@
         <canvas bind:this={canvasElement} width=640 height=128/>
         <Arrow onclick={increasePant} dir="right"/>
     </div>
-    <input type="color" bind:value={pantColor} />
-    <input type="number" bind:value={pantId} on:change={correctPantId} min="1" max="4"/>
 </div>
 
 <style>

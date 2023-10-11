@@ -68,6 +68,7 @@
       margin: 0;
       padding: 0;
       z-index: 120;
+      cursor: pointer;
   }
   button:hover > svg{
     animation-name: pulse;

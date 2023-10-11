@@ -57,8 +57,6 @@
         ctx.fillRect(position * 128 + 72, 72, 8, 16);
     };
 
-    let correctSkinId = () => skinId = Math.min(Math.max(skinId, 1), 24);
-
     let reduceSkin = () => skinId = ((skinId + 22) % 24) + 1;
 
     let increaseSkin = () => skinId = (skinId % 24) + 1;
@@ -71,8 +69,6 @@
         <canvas bind:this={canvasElement} width=640 height=128 />
         <Arrow onclick={increaseSkin} dir="right"/>
     </div>
-    <input type="number" bind:value={skinId} on:change={correctSkinId} min="1" max="24"/>
-    <input type="color" bind:value={eyeColor} />
 </div>
 
 <style>

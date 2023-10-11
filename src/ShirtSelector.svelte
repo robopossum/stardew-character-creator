@@ -92,8 +92,6 @@
         );
     };
 
-    let correctShirtId = () => shirtId = Math.min(Math.max(shirtId, 1), 112);
-
     let reduceShirt = () => shirtId = ((shirtId + 110) % 112) + 1;
 
     let increaseShirt = () => shirtId = (shirtId % 112) + 1;
@@ -106,7 +104,6 @@
         <canvas bind:this={canvasElement} width=640 height=128 />
         <Arrow onclick={increaseShirt} dir="right"/>
     </div>
-    <input type="number" bind:value={shirtId} on:change={correctShirtId} min="1" max="112"/>
 </div>
 
 <style>

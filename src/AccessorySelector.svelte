@@ -86,8 +86,6 @@
         skinCtx.fillRect(position * 128 + 72, 72, 8, 16);
     };
 
-    let correctAccessoryId = () => accessoryId = Math.min(Math.max(accessoryId, 1), 20);
-
     let reduceAccessory = () => accessoryId = ((accessoryId + 18) % 20) + 1;
 
     let increaseAccessory = () => accessoryId = (accessoryId % 20) + 1;
@@ -101,7 +99,6 @@
         <canvas bind:this={canvasElement} width=640 height=128 style="position: relative; z-index: 100"/>
         <Arrow onclick={increaseAccessory} dir="right"/>
     </div>
-    <input type="number" bind:value={accessoryId} on:change={correctAccessoryId} min="1" max="20"/>
 </div>
 
 <style>
