@@ -1,3 +1,5 @@
+import colorutil from 'color-util';
+
 export function tint(ctx, color, bounds = [0, 0, 256, 256]) {
     const r = parseInt("0x" + color.slice(1,3));
     const g = parseInt("0x" + color.slice(3,5));
@@ -20,7 +22,7 @@ export function replaceColor(ctx, prevRGB, newRGB, bounds = [0, 0, 256, 256]) {
   const imgData = ctx.getImageData(...bounds);
   const data = imgData.data;
   for (var i = 0; i < data.length; i += 4) {
-    if (data[i + 3] !== 0 && data[i] === prevRGB[0] && data[i + 1] === prevRGB[1] && data[i + 2] === prevRGB[2]) {
+    if (data[i + 3] !== 0 && inRange(data[i], prevRGB[0], 2) && inRange(data[i + 1], prevRGB[1], 2) && inRange(data[i + 2], prevRGB[2], 2)) {
       data[i] = newRGB[0];
       data[i + 1] = newRGB[1];
       data[i + 2] = newRGB[2];
@@ -29,14 +31,22 @@ export function replaceColor(ctx, prevRGB, newRGB, bounds = [0, 0, 256, 256]) {
   ctx.putImageData(imgData, bounds[0], bounds[1]);
 };
 
-export function rgb2hsv(color) {
-  const r = parseInt("0x" + color.slice(1, 3)) / 255;
-  const g = parseInt("0x" + color.slice(3, 5)) / 255;
-  const b = parseInt("0x" + color.slice(5, 7)) / 255;
+function inRange(x, y, range) {
+  return Math.abs(x - y) < range;
+}
 
-  const v = Math.max(r,g,b), c=v-Math.min(r,g,b);
-  let h=c && ((v==r) ? (g-b)/c : ((v==g) ? 2+(b-r)/c : 4+(r-g)/c)); 
-  return [parseInt(((60*(h<0?h+6:h)) / 360) * 99), parseInt((v&&c/v) * 99), parseInt(v * 99)];
+export function rgb2hsv(color) {
+  const hsv = colorutil.convert([color], colorutil.hex.to.rgb, colorutil.rgb.to.hsv)[0];
+  return [
+    Math.min(Math.round(hsv.h * 100), 99),
+    Math.min(Math.round(hsv.s * 100), 99),
+    Math.min(Math.round(hsv.v * 100), 99)
+  ];
+};
+
+export function hsv2rgb(h,s,v) {
+  h = h / 100, s = s / 100, v = v / 100;
+  return colorutil.convert([{h, s, v}], colorutil.hsv.to.rgb, colorutil.rgb.to.hex)[0];
 };
 
 export function loadImage(sprite) {

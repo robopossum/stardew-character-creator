@@ -4,31 +4,31 @@
     import BoringInputs from './BoringInputs.svelte';
     import { loadImage, rgb2hsv } from './utils';
 
-    let hairColor = '#c15b32';
-    let hairId = 1;
+    export let hairColor = '#bf5331';
+    export let hairId = 1;
     let hairSprite = loadImage('hairstyles');
     let hairFancySprite = loadImage('hairstyles2');
 
-    let eyeColor = '#7a4434';
+    export let eyeColor = '#773f33';
     let eyeSprite = loadImage('eyes');
 
-    let skinId = 1;
+    export let skinId = 1;
     let bodySprite = loadImage('farmer_base');
     let skinSprite = loadImage('skinColors');
     let skinColors;
     let skinData;
 
-    let shirtId = 1;
+    export let shirtId = 1;
     let shirtSprite = loadImage('shirts');
 
-    let pantColor = '#2e55b7';
-    let pantId = 1;
+    export let pantColor = '#2f5cb5';
+    export let pantId = 1;
     let pantSprite = loadImage('pants');
 
-    let accessoryId = 1;
+    export let accessoryId = 1;
     let accessorySprite = loadImage('accessories');
 
-    let petId = 1;
+    export let petId = 2;
 
     $: output = [
         skinId,
